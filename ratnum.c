@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <glib.h>
-
 #include "ratnum.h"
 
 static int gcd(int a, int b) {
@@ -33,7 +31,7 @@ void mpq_canonicalize (mpq_t op)
 char *mpq_get_str(char *unused, int base, const mpq_t op)
 {
 	if (unused || base != 10) {
-		g_warning("not implemented");
+		fprintf(stderr, "not implemented");
 	}
 	int size = 0;
 	char *fmt;
