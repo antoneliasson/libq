@@ -1,7 +1,7 @@
 CFLAGS += -Wall -Wextra
 CFLAGS += -O
 CFLAGS += -g
-CFLAGS += -Iinclude
+CFLAGS += -I. -I$(TUP_CWD)/include
 
 !cc = |> gcc $(CFLAGS) -c %f -o %o |> %B.o
 !ar = |> ar crs %o %f |>

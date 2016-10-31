@@ -1,3 +1,2 @@
 include_rules
-: foreach src/*.c |> !cc |>
-: *.o |> !ar |> libratnum.a
+: src/*.o |> !ar |> libratnum.a
