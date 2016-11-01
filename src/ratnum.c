@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "ratnum.h"
+#include "dbg.h"
 
 static int gcd(int a, int b) {
 	int t;
@@ -13,7 +14,7 @@ static int gcd(int a, int b) {
 	return a;
 }
 
-void mpq_canonicalize (mpq_t op)
+void Q_canonicalize (Q_t *op)
 {
 	if (op->p == 0) {
 		op->q = 1;
@@ -28,27 +29,27 @@ void mpq_canonicalize (mpq_t op)
 	}
 }
 
-char *mpq_get_str(char *unused, int base, const mpq_t op)
+char *Q_get_str(const Q_t op, int base)
 {
-	if (unused || base != 10) {
-		fprintf(stderr, "not implemented");
+	if (base != 10) {
+		log_warn("not implemented");
 	}
 	int size = 0;
 	char *fmt;
 	char *p = NULL;
 
-	if (op->q == 1) {
+	if (op.q == 1) {
 		fmt = "%d";
 	} else {
 		fmt = "%d/%d";
 	}
-	size = snprintf(p, 0, fmt, op->p, op->q);
+	size = snprintf(p, 0, fmt, op.p, op.q);
 	if (size < 0)
 		return NULL;
 
 	size++;
 	p = malloc(size);
-	size = snprintf(p, size, fmt, op->p, op->q);
+	size = snprintf(p, size, fmt, op.p, op.q);
 	if (size < 0) {
 		free(p);
 		return NULL;
@@ -56,83 +57,78 @@ char *mpq_get_str(char *unused, int base, const mpq_t op)
 	return p;
 }
 
-void mpq_swap (mpq_t rop1, mpq_t rop2)
+void Q_swap (Q_t rop1, Q_t rop2)
 {
 	int t;
-	t = rop1->p;
-	rop1->p = rop2->p;
-	rop2->p = t;
-	t = rop1->q;
-	rop1->q = rop2->q;
-	rop2->q = t;
+	t = rop1.p;
+	rop1.p = rop2.p;
+	rop2.p = t;
+	t = rop1.q;
+	rop1.q = rop2.q;
+	rop2.q = t;
 }
 
-void mpq_sub (mpq_t difference, const mpq_t minuend, const mpq_t subtrahend)
+Q_t Q_sub (const Q_t minuend, const Q_t subtrahend)
 {
-	if (minuend->q == subtrahend->q) {
-		difference->p = minuend->p - subtrahend->p;
-		difference->q = minuend->q;
+        Q_t difference;
+	if (minuend.q == subtrahend.q) {
+		difference.p = minuend.p - subtrahend.p;
+		difference.q = minuend.q;
 	} else {
-		difference->p = minuend->p * subtrahend->q - subtrahend->p * minuend->q;
-		difference->q = minuend->q * subtrahend->q;
+		difference.p = minuend.p * subtrahend.q - subtrahend.p * minuend.q;
+		difference.q = minuend.q * subtrahend.q;
 	}
-	mpq_canonicalize(difference);
+	Q_canonicalize(&difference);
+	return difference;
 }
 
-int mpq_cmp (const mpq_t op1, const mpq_t op2)
+int Q_cmp (const Q_t op1, const Q_t op2)
 {
-	mpq_t t;
-	mpq_sub(t, op1, op2);
-	return t->p;
+	Q_t t = Q_sub(op1, op2);
+	return t.p;
 }
 
-int mpq_cmp_si (const mpq_t op1, long int num2, unsigned long int den2)
+int Q_cmp_i (const Q_t op1, int i)
 {
-	mpq_t t;
-	t->p = num2;
-	t->q = den2;
-	return mpq_cmp(op1, t);
+	Q_t t;
+	t.p = i;
+	t.q = 1;
+	return Q_cmp(op1, t);
 }
 
-void mpq_set_si (mpq_t rop, signed long int op1, unsigned long int op2)
+Q_t Q_div (const Q_t dividend, const Q_t divisor)
 {
-	rop->p = op1;
-	rop->q = op2;
+        Q_t quotient;
+	quotient.p = dividend.p * divisor.q;
+	quotient.q = dividend.q * divisor.p;
+	Q_canonicalize(&quotient);
+	return quotient;
 }
 
-void mpq_set (mpq_t rop, const mpq_t op)
+Q_t Q_add (const Q_t addend1, const Q_t addend2)
 {
-	rop->p = op->p;
-	rop->q = op->q;
-}
-
-void mpq_div (mpq_t quotient, const mpq_t dividend, const mpq_t divisor)
-{
-	quotient->p = dividend->p * divisor->q;
-	quotient->q = dividend->q * divisor->p;
-	mpq_canonicalize(quotient);
-}
-
-void mpq_add (mpq_t sum, const mpq_t addend1, const mpq_t addend2)
-{
-	if (addend1->q == addend2->q) {
-		sum->p = addend1->p + addend2->p;
-		sum->q = addend1->q;
+        Q_t sum;
+	if (addend1.q == addend2.q) {
+		sum.p = addend1.p + addend2.p;
+		sum.q = addend1.q;
 	} else {
-		sum->p = addend1->p * addend2->q + addend2->p * addend1->q;
-		sum->q = addend1->q * addend2->q;
+		sum.p = addend1.p * addend2.q + addend2.p * addend1.q;
+		sum.q = addend1.q * addend2.q;
 	}
-	mpq_canonicalize(sum);
+	Q_canonicalize(&sum);
+	return sum;
 }
 
-void mpq_mul (mpq_t product, const mpq_t multiplier, const mpq_t multiplicand)
+Q_t Q_mul (const Q_t multiplier, const Q_t multiplicand)
 {
-	product->p = multiplier->p * multiplicand->p;
-	product->q = multiplier->q * multiplicand->q;
-	mpq_canonicalize(product);
+        Q_t product;
+	product.p = multiplier.p * multiplicand.p;
+	product.q = multiplier.q * multiplicand.q;
+	Q_canonicalize(&product);
+	return product;
 }
 
-double mpq_get_d (const mpq_t op)
+double Q_get_d (const Q_t op)
 {
-	return (double) op->p / op->q;
+	return (double) op.p / op.q;
 }

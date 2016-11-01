@@ -3,30 +3,29 @@
 typedef struct {
 	int p;
 	int q;
-} ratnum_t;
+} Q_t;
 
-typedef ratnum_t mpq_t[1];
+typedef Q_t mpq_t[1];
 
-void mpq_canonicalize (mpq_t op);
-char *mpq_get_str(char *unused, int base, const mpq_t op);
-void mpq_swap (mpq_t rop1, mpq_t rop2);
-void mpq_sub (mpq_t difference, const mpq_t minuend, const mpq_t subtrahend);
-int mpq_cmp (const mpq_t op1, const mpq_t op2);
-int mpq_cmp_si (const mpq_t op1, long int num2, unsigned long int den2);
-void mpq_set_si (mpq_t rop, signed long int op1, unsigned long int op2);
-void mpq_set (mpq_t rop, const mpq_t op);
-void mpq_div (mpq_t quotient, const mpq_t dividend, const mpq_t divisor);
-void mpq_add (mpq_t sum, const mpq_t addend1, const mpq_t addend2);
-void mpq_mul (mpq_t product, const mpq_t multiplier, const mpq_t multiplicand);
+void Q_canonicalize (Q_t *op);
+char *Q_get_str(const Q_t op, int base);
+void Q_swap (Q_t rop1, Q_t rop2);
+Q_t Q_sub (const Q_t minuend, const Q_t subtrahend);
+int Q_cmp (const Q_t op1, const Q_t op2);
+int Q_cmp_i (const Q_t op1, int i);
+Q_t Q_div (const Q_t dividend, const Q_t divisor);
+Q_t Q_add (const Q_t addend1, const Q_t addend2);
+Q_t Q_mul (const Q_t multiplier, const Q_t multiplicand);
+double Q_get_d (const Q_t op);
 
-static inline int mpq_equal (const mpq_t op1, const mpq_t op2)
+static inline int Q_equal (const Q_t op1, const Q_t op2)
 {
-	return !mpq_cmp(op1, op2);
+	return !Q_cmp(op1, op2);
 }
 
-static inline int mpq_is_zero (const mpq_t op)
+static inline int Q_is_zero (const Q_t op)
 {
-	return !mpq_cmp_si(op, 0, 1);
+	return !Q_cmp_i(op, 0);
 }
 
-double mpq_get_d (const mpq_t op);
+#define Q_zero { .p = 0, .q = 1 }
