@@ -19,6 +19,26 @@ int Q_test_eq (Q_t expected, Q_t actual)
         return true;
 }
 
+char *test_canonicalize()
+{
+        expected = (Q_t) {-1, 2};
+        a = (Q_t) {2, -4};
+        Q_canonicalize(&a);
+        mu_assert(Q_test_eq(expected, a), "not equal");
+
+        expected = (Q_t) {1, 1};
+        a = (Q_t) {-4, -4};
+        Q_canonicalize(&a);
+        mu_assert(Q_test_eq(expected, a), "not equal");
+
+        expected = Q_zero;
+        a = (Q_t) {0, -2};
+        Q_canonicalize(&a);
+        mu_assert(Q_test_eq(expected, a), "not equal");
+
+        return NULL;
+}
+
 char *test_add()
 {
         expected = (Q_t) {3, 10};
@@ -101,6 +121,7 @@ char *all_tests()
         mu_run_test(test_mul);
         mu_run_test(test_swap);
         mu_run_test(test_str);
+        mu_run_test(test_canonicalize);
 
         return NULL;
 }
