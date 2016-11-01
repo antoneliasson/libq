@@ -27,4 +27,4 @@ static inline int Q_is_zero (const Q_t op)
 	return !Q_cmp_i(op, 0);
 }
 
-#define Q_zero { .p = 0, .q = 1 }
+#define Q_zero (Q_t) {0, 1}
