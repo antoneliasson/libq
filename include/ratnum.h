@@ -9,7 +9,6 @@ typedef Q_t mpq_t[1];
 
 void Q_canonicalize (Q_t *op);
 char *Q_get_str(const Q_t op, int base);
-void Q_swap (Q_t rop1, Q_t rop2);
 Q_t Q_sub (const Q_t minuend, const Q_t subtrahend);
 int Q_cmp (const Q_t op1, const Q_t op2);
 int Q_cmp_i (const Q_t op1, int i);

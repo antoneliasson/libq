@@ -57,17 +57,6 @@ char *Q_get_str(const Q_t op, int base)
 	return p;
 }
 
-void Q_swap (Q_t rop1, Q_t rop2)
-{
-	int t;
-	t = rop1.p;
-	rop1.p = rop2.p;
-	rop2.p = t;
-	t = rop1.q;
-	rop1.q = rop2.q;
-	rop2.q = t;
-}
-
 Q_t Q_sub (const Q_t minuend, const Q_t subtrahend)
 {
         Q_t difference;

@@ -40,12 +40,27 @@ char *test_mul()
         return NULL;
 }
 
+char *test_swap()
+{
+        a = (Q_t) {1, 2};
+        b = (Q_t) {3, 4};
+
+        Q_t tmp = a;
+        a = b;
+        b = tmp;
+
+        mu_assert(Q_test_eq((Q_t) {3, 4}, a), "not equal");
+        mu_assert(Q_test_eq((Q_t) {1, 2}, b), "not equal");
+        return NULL;
+}
+
 char *all_tests()
 {
         mu_suite_start();
 
         mu_run_test(test_add);
         mu_run_test(test_mul);
+        mu_run_test(test_swap);
 
         return NULL;
 }
