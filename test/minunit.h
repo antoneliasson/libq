@@ -9,6 +9,9 @@
 #define mu_suite_start() char *message = NULL
 
 #define mu_assert(test, message) if (!(test)) { log_err(message); return message; }
+#define mu_assert_str_eq(expected, actual) if (strcmp(expected, actual)) { \
+        log_err("expected '%s', actual '%s'", expected, actual); \
+        return "strings not equal"; }
 #define mu_run_test(test) debug("\n-----%s", " " #test); \
     message = test(); tests_run++; if (message) return message;
 
