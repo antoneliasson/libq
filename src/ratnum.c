@@ -38,7 +38,9 @@ char *Q_get_str(const Q_t op, int base)
 	char *fmt;
 	char *p = NULL;
 
-	if (op.q == 1) {
+	if (op.q == 0) {
+	        fmt = "NaN";
+	} else if (op.q == 1) {
 		fmt = "%d";
 	} else {
 		fmt = "%d/%d";

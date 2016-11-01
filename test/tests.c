@@ -54,6 +54,28 @@ char *test_swap()
         return NULL;
 }
 
+char *test_str()
+{
+        char *s;
+
+        a = (Q_t) {0};
+        s = Q_get_str(a, 10);
+        mu_assert_str_eq("NaN", s);
+        free(s);
+
+        a = (Q_t) {2, 1};
+        s = Q_get_str(a, 10);
+        mu_assert_str_eq("2", s);
+        free(s);
+
+        a = (Q_t) {3, 4};
+        s = Q_get_str(a, 10);
+        mu_assert_str_eq("3/4", s);
+        free(s);
+
+        return NULL;
+}
+
 char *all_tests()
 {
         mu_suite_start();
@@ -61,6 +83,7 @@ char *all_tests()
         mu_run_test(test_add);
         mu_run_test(test_mul);
         mu_run_test(test_swap);
+        mu_run_test(test_str);
 
         return NULL;
 }
