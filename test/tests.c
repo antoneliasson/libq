@@ -30,6 +30,22 @@ char *test_add()
         return NULL;
 }
 
+char *test_sub()
+{
+        expected = (Q_t) {1, 2};
+        a = (Q_t) {3, 4};
+        b = (Q_t) {1, 4};
+        c = Q_sub(a, b);
+        mu_assert(Q_test_eq(expected, c), "not equal");
+
+        expected = Q_zero;
+        a = (Q_t) {1, 1};
+        b = (Q_t) {1, 1};
+        c = Q_sub(a, b);
+        mu_assert(Q_test_eq(expected, c), "not equal");
+        return NULL;
+}
+
 char *test_mul()
 {
         expected = (Q_t) {3, 8};
@@ -81,6 +97,7 @@ char *all_tests()
         mu_suite_start();
 
         mu_run_test(test_add);
+        mu_run_test(test_sub);
         mu_run_test(test_mul);
         mu_run_test(test_swap);
         mu_run_test(test_str);
