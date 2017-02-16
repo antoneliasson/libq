@@ -16,7 +16,9 @@ static int gcd(int a, int b) {
 
 void Q_canonicalize (Q_t *op)
 {
-	if (op->p == 0) {
+	if (op->q == 0) {
+	        return;
+	} else if (op->p == 0) {
 		op->q = 1;
 	} else {
 		int g = abs(gcd(op->p, op->q));
@@ -75,8 +77,14 @@ Q_t Q_sub (const Q_t minuend, const Q_t subtrahend)
 
 int Q_cmp (const Q_t op1, const Q_t op2)
 {
-	Q_t t = Q_sub(op1, op2);
-	return t.p;
+        if (op1.q == 0 && op2.q == 0) {
+                return 0;
+        } else if (op1.q == 0 || op2.q == 0) {
+                return 1;
+        } else {
+                Q_t t = Q_sub(op1, op2);
+                return t.p;
+        }
 }
 
 int Q_cmp_i (const Q_t op1, int i)
